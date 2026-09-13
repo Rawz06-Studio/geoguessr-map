@@ -1,12 +1,14 @@
 FROM node:24-alpine
 
+RUN npm install -g pnpm@11.5.2
+
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci --only=production
+COPY pnpm-lock.yaml package.json ./
+RUN pnpm install --prod
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
