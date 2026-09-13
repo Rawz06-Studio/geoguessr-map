@@ -22,5 +22,5 @@ jobs:
       packages: write   # Nécessaire pour Docker/Maven/NPM
     with:
       image_name: geoguessr
-      dokploy_app_id: VwtFFJoX1ImMgchyzItTg
+      dokploy_app_id: iSkpHmNV4xSD726hQvQzS
     secrets: inherit
