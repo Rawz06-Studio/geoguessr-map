@@ -787,20 +787,6 @@
 <footer>Données : Google Sheets · Carte : simplemaps.com</footer>
 
 <script>
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/1ljCjgfixPIROtZHAuu831AsEcKxOIa4d4HpmQNq4TDE/export?format=csv&gid=1484059711';
-
-function parseCSVLine(line) {
-  const result = [];
-  let current = '';
-  let inQuotes = false;
-  for (const char of line) {
-    if (char === '"') { inQuotes = !inQuotes; }
-    else if (char === ',' && !inQuotes) { result.push(current); current = ''; }
-    else { current += char; }
-  }
-  result.push(current);
-  return result;
-}
 
 function scoreColor(score) {
   if (score >= 25000) return '#1a6b3c';
@@ -854,30 +840,7 @@ function hideTooltip() {
 }
 
 async function loadData() {
-  const resp = await fetch(CSV_URL);
-  const text = await resp.text();
-  const lines = text.split('\n');
-
-  const deptData = {};
-
-  lines.slice(2).forEach(line => {
-    const cols = parseCSVLine(line);
-    const numero = cols[0]?.trim();
-    const name = cols[1]?.trim();
-    const scoreS2Raw = cols[3]?.trim();
-
-    if (!numero || (!(!isNaN(parseInt(numero))) && !/^2[AB]$/i.test(numero))) return;
-    if (!name) return;
-
-    const scoreS2 = scoreS2Raw ? parseInt(scoreS2Raw.replace(/\s/g, '').replace(',', '')) : null;
-    const code = numero.toString().padStart(2, '0').toUpperCase();
-    // Handle 2A/2B
-    const svgId = 'FR' + (/^2[Aa]$/.test(numero) ? '2A' : /^2[Bb]$/.test(numero) ? '2B' : code);
-
-    deptData[svgId] = { name, code, score: isNaN(scoreS2) ? null : scoreS2 };
-  });
-
-  return deptData;
+  return window.DEPT_DATA || {};
 }
 
 async function init() {
